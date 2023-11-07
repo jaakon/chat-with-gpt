@@ -1,10 +1,10 @@
 import EventEmitter from "events";
-import { Configuration, OpenAIApi } from "openai";
+import {Configuration, OpenAIApi} from "openai";
 import SSE from "../utils/sse";
-import { OpenAIMessage, Parameters } from "./types";
-import { backend } from "../backend";
+import {OpenAIMessage, Parameters} from "./types";
+import {backend} from "../backend";
 
-export const defaultModel = 'gpt-3.5-turbo';
+export const defaultModel = 'gpt-4';
 
 export function isProxySupported() {
     return !!backend.current?.services?.includes('openai');
@@ -109,7 +109,8 @@ export async function createStreamingChatCompletion(messages: OpenAIMessage[], p
             let error = event.data;
             try {
                 error = JSON.parse(error).error.message;
-            } catch (e) {}
+            } catch (e) {
+            }
             emitter.emit('error', error);
         }
     });
@@ -140,12 +141,6 @@ export async function createStreamingChatCompletion(messages: OpenAIMessage[], p
 }
 
 export const maxTokensByModel = {
-    "gpt-3.5-turbo": 4096,
     "gpt-4": 8192,
-    "gpt-4-0613": 8192,
-    "gpt-4-32k": 32768,
-    "gpt-4-32k-0613": 32768,
-    "gpt-3.5-turbo-16k": 16384,
-    "gpt-3.5-turbo-0613": 4096,
-    "gpt-3.5-turbo-16k-0613": 16384,
+    "gpt-4-1106-preview": 32768, // actually 128000 -> https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
 };
